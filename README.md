@@ -35,4 +35,8 @@ SentryGo allows you to monitor the status of various web services and APIs. It u
    ```bash
    docker-compose up --build
    ```
+
+<img width="1228" height="692" alt="image" src="https://github.com/user-attachments/assets/11991fe9-742c-49ea-8580-f250003419c3" />
+
+   
    
