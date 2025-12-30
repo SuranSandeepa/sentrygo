@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SentryGo Dashboard</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-900 text-gray-100 min-h-screen px-4 py-10"
+    hx-get="/"
+    hx-trigger="every 10s"
+    hx-target="body"
+  >
+    <div class="max-w-5xl mx-auto">
+      <header class="mb-10 flex justify-between items-end">
+        <div>
+          <h1 class="text-4xl font-black text-blue-500">SENTRY GO</h1>
+          <p class="text-gray-400">Live Infrastructure Monitoring</p>
+        </div>
+        <div class="text-xs font-mono text-gray-500">
+          Auto-refreshing every 10s
+        </div>
+      </header>
+
+      <section
+        class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg mb-8"
+      >
+        <h2 class="text-lg font-bold mb-4">Monitor New Endpoint</h2>
+        <form
+          hx-post="/add"
+          hx-target="body"
+          class="flex flex-col md:flex-row gap-4"
+        >
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="Service Name"
+            class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 focus:border-blue-500 outline-none"
+          />
+          <input
+            type="url"
+            name="url"
+            required
+            placeholder="https://..."
+            class="flex-2 bg-gray-900 border border-gray-700 rounded-lg px-4 py-2 focus:border-blue-500 outline-none"
+          />
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition"
+          >
+            Add Service
+          </button>
+        </form>
+      </section>
+
+      <div
+        class="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-xl"
+      >
+        <table class="w-full text-left">
+          <thead class="bg-gray-700/50">
+            <tr>
+              <th class="p-4 text-xs font-bold uppercase text-gray-400">
+                Service
+              </th>
+              <th class="p-4 text-xs font-bold uppercase text-gray-400">
+                Endpoint
+              </th>
+              <th class="p-4 text-xs font-bold uppercase text-gray-400">
+                Status
+              </th>
+              <th class="p-4 text-xs font-bold uppercase text-gray-400">
+                Last Check
+              </th>
+              <th
+                class="p-4 text-xs font-bold uppercase text-gray-400 text-right"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            {{range .}}
+            <tr class="hover:bg-gray-700/30 transition">
+              <td class="p-4 font-bold">{{.Name}}</td>
+              <td class="p-4 text-gray-400 text-sm">{{.URL}}</td>
+              <td class="p-4">
+                {{if eq .Status "UP"}}
+                <span
+                  class="bg-green-900/30 text-green-400 border border-green-800 px-3 py-1 rounded-full text-xs font-bold"
+                  >● UP</span
+                >
+                {{else if eq .Status "DOWN"}}
+                <span
+                  class="bg-red-900/30 text-red-400 border border-red-800 px-3 py-1 rounded-full text-xs font-bold"
+                  >● DOWN</span
+                >
+                {{else}}
+                <span
+                  class="bg-gray-700 text-gray-400 px-3 py-1 rounded-full text-xs"
+                  >PENDING</span
+                >
+                {{end}}
+              </td>
+              <td class="p-4 text-xs text-gray-500">
+                {{.LastCheck.Format "15:04:05 Jan 02"}}
+              </td>
+              <td class="p-4 text-right">
+                <button
+                  hx-delete="/delete/{{.ID}}"
+                  hx-target="closest tr"
+                  hx-swap="outerHTML"
+                  hx-confirm="Delete this monitor?"
+                  class="text-red-500 hover:text-red-400 text-sm font-bold"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
