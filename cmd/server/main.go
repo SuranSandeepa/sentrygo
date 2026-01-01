@@ -12,7 +12,7 @@ import (
 
 	"github.com/SuranSandeepa/sentrygo/internal/db"
 	"github.com/SuranSandeepa/sentrygo/internal/handlers"
-	"github.com/SuranSandeepa/sentrygo/internal/monitor" // 1. MAKE SURE THIS IS HERE
+	"github.com/SuranSandeepa/sentrygo/internal/monitor"
 )
 
 func main() {
